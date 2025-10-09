@@ -109,9 +109,21 @@ export default function PoliciesPage() {
     const { data: userData } = await supabase.auth.getUser();
     if (!userData.user) return;
 
-    if (selectedClient !== 'all') {
+    const deleteChoice = confirm(
+      selectedClient !== 'all'
+        ? `Seçili Müşteri: ${clients.find(c => c.id === selectedClient)?.name}\n\nHangi poliçeleri silmek istiyorsunuz?\n\nTAMAM = Bu müşterinin poliçelerini sil\nİPTAL = Tüm müşterilerin poliçelerini sil`
+        : `Hangi poliçeleri silmek istiyorsunuz?\n\nTAMAM = Tüm müşterilerin poliçelerini sil\nİPTAL = İşlemi iptal et`
+    );
+
+    if (selectedClient !== 'all' && deleteChoice) {
       const client = clients.find(c => c.id === selectedClient);
-      const clientPoliciesCount = filteredPolicies.length;
+      const clientPolicies = policies.filter(p => p.client_id === selectedClient);
+      const clientPoliciesCount = clientPolicies.length;
+
+      if (clientPoliciesCount === 0) {
+        alert('❌ Bu müşterinin silinecek poliçesi yok.');
+        return;
+      }
 
       if (!confirm(`⚠️ UYARI: "${client?.name}" müşterisinin ${clientPoliciesCount} adet poliçesini kalıcı olarak silmek istediğinizden emin misiniz?\n\n(Müşteri kaydı SİLİNMEYECEK, sadece poliçeler silinecek)`)) {
         return;
@@ -130,14 +142,20 @@ export default function PoliciesPage() {
 
         if (error) throw error;
         alert(`✅ ${client?.name} müşterisinin ${clientPoliciesCount} poliçesi silindi (Müşteri kaydı korundu)`);
+        setSelectedClient('all');
         fetchPolicies();
       } catch (error) {
         console.error('Silme hatası:', error);
         alert('❌ Silme işlemi başarısız: ' + (error as any).message);
       }
-    } else {
+    } else if (selectedClient === 'all' && deleteChoice) {
       const totalPolicies = policies.length;
       const totalClients = clients.length;
+
+      if (totalPolicies === 0) {
+        alert('❌ Silinecek poliçe yok.');
+        return;
+      }
 
       if (!confirm(`🚨 TEHLİKELİ İŞLEM!\n\n${totalClients} müşteriye ait TOPLAM ${totalPolicies} POLİÇE kalıcı olarak silinecek.\n\n(Müşteri kayıtları SİLİNMEYECEK)\n\nBu işlem GERİ ALINAMAZ! Emin misiniz?`)) {
         return;
