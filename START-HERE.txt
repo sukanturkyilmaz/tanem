@@ -1,0 +1,87 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    🚨 ÖNEMLİ: TAR.GZ ÇALIŞMIYOR!                         ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+SORUN: Bolt.new ortamı tar.gz dosyalarını bozuyor (gzip hatası).
+
+ÇÖZÜM: Dosyaları TEK TEK indirip cPanel'e yükleyin.
+
+
+🌐 1. İNDİRME SAYFASINI AÇIN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Bolt.new'de şu adresi açın:
+
+    http://localhost:8080/download.html
+
+Bu sayfada 4 dosyayı tek tek indirebilirsiniz.
+
+
+📥 2. DOSYALARI İNDİRİN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+İndirme sayfasından şu 4 dosyayı indirin:
+
+1. .htaccess
+2. index.html
+3. index-CbrOWOiA.css
+4. index-D-eNjOcn.js
+
+
+📤 3. CPANEL'E YÜKLEME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. cPanel File Manager → "public_html" klasörüne gidin
+
+2. ESKİ DOSYALARI SİLİN:
+   ✓ index.html (eski)
+   ✓ assets/ klasörü (eski)
+   ✓ .htaccess (eski - varsa)
+
+3. UPLOAD İLE ŞU DOSYALARI YÜKLEYİN:
+   ✓ .htaccess
+   ✓ index.html
+
+4. "NEW FOLDER" İLE "assets" KLASÖRÜ OLUŞTURUN
+
+5. "assets" KLASÖRÜNE GİRİN
+
+6. UPLOAD İLE ŞU DOSYALARI YÜKLEYİN:
+   ✓ index-CbrOWOiA.css
+   ✓ index-D-eNjOcn.js
+
+
+✅ 4. DOĞRULAMA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+public_html yapısı şöyle olmalı:
+
+    public_html/
+    ├── .htaccess
+    ├── index.html
+    └── assets/
+        ├── index-CbrOWOiA.css
+        └── index-D-eNjOcn.js
+
+
+🌐 5. TEST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+https://stnsigorta.com adresini açın:
+✓ Login ekranı görünmeli
+✓ Stiller yüklenmeli
+✓ Console'da (F12) kritik hata olmamalı
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+📝 HIZLI ÖZET:
+
+1. http://localhost:8080/download.html → 4 dosyayı indir
+2. cPanel → public_html → eski dosyaları sil
+3. .htaccess ve index.html yükle
+4. assets/ klasörü oluştur
+5. CSS ve JS dosyalarını assets/ içine yükle
+6. Test et: https://stnsigorta.com
+
+═══════════════════════════════════════════════════════════════════════════

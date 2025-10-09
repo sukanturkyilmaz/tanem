@@ -1,0 +1,19 @@
+=====================================
+CPANEL'E YÜKLENECEK 3 DOSYA
+=====================================
+
+Bu 3 dosyayı public/ klasöründen indir:
+
+1. PRODUCTION-index.html (483 bytes)
+2. production-styles.css (35 KB)
+3. production-app.js (1 MB)
+
+CPANEL ADIMLAR:
+--------------
+1. File Manager → public_html
+2. Upload 3 dosyayı
+3. PRODUCTION-index.html → Rename → index.html
+4. Tamam!
+
+NOT: .htaccess dosyası otomatik gelecek
+=====================================

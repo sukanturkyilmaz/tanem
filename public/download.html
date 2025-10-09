@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STN Sigorta - Dosya İndirme</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #1e40af;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .alert {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .alert strong { color: #92400e; display: block; margin-bottom: 8px; }
+        .alert p { color: #92400e; line-height: 1.6; }
+        .file-list { margin-bottom: 30px; }
+        .file-item {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+        .file-item:hover {
+            border-color: #1e40af;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30,64,175,0.1);
+        }
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .file-icon { font-size: 28px; }
+        .file-name {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 16px;
+        }
+        .file-desc {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .btn {
+            background: #1e40af;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #1e3a8a;
+            transform: scale(1.05);
+        }
+        .instructions {
+            background: #f0f9ff;
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .instructions h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .instructions ol {
+            color: #475569;
+            line-height: 1.8;
+            padding-left: 25px;
+        }
+        .instructions li { margin-bottom: 8px; }
+        code {
+            background: #1e293b;
+            color: #22c55e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>STN Sigorta Deployment</h1>
+            <p class="subtitle">cPanel için dosyaları tek tek indirin</p>
+
+            <div class="alert">
+                <strong>TAR.GZ dosyası çalışmıyor!</strong>
+                <p>Bolt.new ortamında arşiv dosyaları bozuluyor. Bu yüzden 4 dosyayı ayrı ayrı indirmeniz gerekiyor.</p>
+            </div>
+
+            <div class="file-list">
+                <h3 style="margin-bottom: 15px; color: #1e293b;">İndirilecek Dosyalar:</h3>
+
+                <div class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">📄</div>
+                        <div>
+                            <div class="file-name">.htaccess</div>
+                            <div class="file-desc">Apache konfigürasyon</div>
+                        </div>
+                    </div>
+                    <a href="../.htaccess" download class="btn">İndir</a>
+                </div>
+
+                <div class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">🌐</div>
+                        <div>
+                            <div class="file-name">index.html</div>
+                            <div class="file-desc">Ana HTML dosyası</div>
+                        </div>
+                    </div>
+                    <a href="../dist/index.html" download class="btn">İndir</a>
+                </div>
+
+                <div class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">🎨</div>
+                        <div>
+                            <div class="file-name">index-CbrOWOiA.css</div>
+                            <div class="file-desc">Stil dosyası (assets klasörüne)</div>
+                        </div>
+                    </div>
+                    <a href="../dist/assets/index-CbrOWOiA.css" download class="btn">İndir</a>
+                </div>
+
+                <div class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">⚡</div>
+                        <div>
+                            <div class="file-name">index-D-eNjOcn.js</div>
+                            <div class="file-desc">JavaScript dosyası (assets klasörüne)</div>
+                        </div>
+                    </div>
+                    <a href="../dist/assets/index-D-eNjOcn.js" download class="btn">İndir</a>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h3>Yükleme Adımları:</h3>
+                <ol>
+                    <li>Yukarıdaki 4 dosyayı bilgisayarınıza indirin</li>
+                    <li>cPanel File Manager → <code>public_html</code></li>
+                    <li>Eski dosyaları silin: <code>index.html</code>, <code>assets/</code>, <code>.htaccess</code></li>
+                    <li><code>.htaccess</code> ve <code>index.html</code> dosyalarını upload edin</li>
+                    <li><code>assets</code> klasörü oluşturun (New Folder)</li>
+                    <li>CSS ve JS dosyalarını <code>assets/</code> içine yükleyin</li>
+                    <li>Test: <code>https://stnsigorta.com</code></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

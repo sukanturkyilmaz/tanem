@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STN Sigorta - cPanel Yükleme Paketi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+            max-width: 700px;
+            width: 100%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: #1a365d;
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+        .subtitle {
+            color: #718096;
+            font-size: 16px;
+        }
+        .file-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
+        }
+        .file-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .file-details h3 {
+            color: #2d3748;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .file-meta {
+            color: #4a5568;
+            font-size: 14px;
+        }
+        .file-size {
+            background: #2c5282;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            color: white;
+            border: none;
+            padding: 16px 0;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(44, 82, 130, 0.4);
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(44, 82, 130, 0.5);
+        }
+        .instructions {
+            background: #fff5f5;
+            border-left: 4px solid #fc8181;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .instructions h2 {
+            color: #c53030;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .steps {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .steps h2 {
+            color: #2d3748;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        ol {
+            color: #4a5568;
+            font-size: 15px;
+            line-height: 2;
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 12px;
+        }
+        code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .warning-box {
+            background: #fffaf0;
+            border: 2px solid #ed8936;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .warning-box h3 {
+            color: #c05621;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .warning-box ul {
+            color: #744210;
+            font-size: 14px;
+            line-height: 1.8;
+            padding-left: 25px;
+        }
+        .success-box {
+            background: #f0fff4;
+            border: 2px solid #48bb78;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .success-box h3 {
+            color: #22543d;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .success-box p {
+            color: #276749;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .emoji {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>cPanel Yükleme Paketi</h1>
+            <p class="subtitle">STN Sigorta - Hazır Deployment</p>
+        </div>
+
+        <div class="file-card">
+            <div class="file-info">
+                <div class="file-details">
+                    <h3><span class="emoji">📦</span>PUBLIC-HTML-READY.tar.gz</h3>
+                    <p class="file-meta">Doğrudan public_html'e yüklenebilir</p>
+                </div>
+                <div class="file-size">289 KB</div>
+            </div>
+            <a href="PUBLIC-HTML-READY.tar.gz" download="PUBLIC-HTML-READY.tar.gz" class="download-btn">
+                ⬇️ Paketi İndir
+            </a>
+        </div>
+
+        <div class="instructions">
+            <h2><span class="emoji">⚠️</span>Yüklemeden ÖNCE Yapılacaklar</h2>
+            <ol>
+                <li><strong>Mevcut dosyaları yedekleyin</strong> (varsa)</li>
+                <li><code>public_html</code> klasörüne gidin</li>
+                <li><strong>Şu dosyaları silin:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><code>index.html</code></li>
+                        <li><code>assets/</code> klasörü</li>
+                        <li><code>.htaccess</code> (varsa eski)</li>
+                        <li>Diğer tüm eski proje dosyaları</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="steps">
+            <h2><span class="emoji">📋</span>Yükleme Adımları</h2>
+            <ol>
+                <li><strong>Paketi indirin</strong> yukarıdaki butondan</li>
+                <li><strong>cPanel File Manager'ı açın</strong></li>
+                <li><code>public_html</code> klasörüne gidin</li>
+                <li><strong>Upload</strong> butonuna tıklayın</li>
+                <li><code>PUBLIC-HTML-READY.tar.gz</code> dosyasını seçip yükleyin</li>
+                <li>Dosya yüklendikten sonra <strong>dosyaya sağ tıklayın</strong></li>
+                <li><strong>"Extract"</strong> seçeneğine tıklayın</li>
+                <li>Çıkartma tamamlandıktan sonra <code>PUBLIC-HTML-READY.tar.gz</code> dosyasını silebilirsiniz</li>
+                <li>Tarayıcınızda <strong>stnsigorta.com</strong> adresini açın ve test edin</li>
+            </ol>
+        </div>
+
+        <div class="warning-box">
+            <h3><span class="emoji">🔍</span>Yükleme Sonrası Kontrol</h3>
+            <ul>
+                <li><code>public_html</code> içinde <code>index.html</code> olmalı</li>
+                <li><code>public_html</code> içinde <code>assets/</code> klasörü olmalı</li>
+                <li><code>public_html</code> içinde <code>.htaccess</code> olmalı</li>
+                <li>Site açıldığında login ekranı görünmeli</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <h3><span class="emoji">✅</span>Paket İçeriği</h3>
+            <p>
+                Bu paket React uygulamanızın build edilmiş halini içerir.
+                İçinde <code>.htaccess</code> dosyası bulunur (HTTPS yönlendirme ve React Router desteği ile).
+                Hiçbir ekstra konfigürasyon gerekmez.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

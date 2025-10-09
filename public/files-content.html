@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dosya İçerikleri - Kopyala & Yapıştır</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .file-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .file-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .file-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .file-path {
+            font-size: 13px;
+            color: #64748b;
+            font-family: monospace;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .copy-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .copy-btn:hover {
+            background: #1e3a8a;
+            transform: scale(1.05);
+        }
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        .content-box {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .instructions {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .instructions h3 {
+            color: #92400e;
+            margin-bottom: 10px;
+        }
+        .instructions ol {
+            color: #92400e;
+            padding-left: 20px;
+            line-height: 1.8;
+        }
+        .step {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .step strong {
+            color: #1e40af;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .big-file {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗂️ STN Sigorta - Dosya İçerikleri</h1>
+        <p class="subtitle">Her dosyanın içeriğini kopyala-yapıştır ile cPanel'e yükle</p>
+
+        <div class="instructions">
+            <h3>📋 Nasıl Kullanılır:</h3>
+            <ol>
+                <li>Her dosyanın yanındaki "Kopyala" butonuna tıkla</li>
+                <li>cPanel File Manager'da yeni dosya oluştur (File → New File)</li>
+                <li>Dosyayı sağ tık → Edit</li>
+                <li>İçeriği yapıştır (Ctrl+V) ve Save</li>
+                <li>Dosya adını AYNEN yaz!</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <strong>📁 Hedef Klasör Yapısı:</strong>
+            public_html/<br>
+            ├── .htaccess<br>
+            ├── index.html<br>
+            └── assets/ (önce bu klasörü oluştur: New Folder)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;├── index-CbrOWOiA.css<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;└── index-D-eNjOcn.js
+        </div>
+
+        <!-- File 1: .htaccess -->
+        <div class="file-section">
+            <div class="file-header">
+                <div>
+                    <div class="file-title">1️⃣ .htaccess</div>
+                    <div class="file-path">public_html/.htaccess</div>
+                </div>
+                <button class="copy-btn" onclick="copyContent('htaccess', this)">📋 Kopyala</button>
+            </div>
+            <textarea class="content-box" id="htaccess" readonly>
+RewriteEngine On
+RewriteBase /
+
+# Redirect HTTP to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Handle React Router
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+</textarea>
+        </div>
+
+        <!-- File 2: index.html -->
+        <div class="file-section">
+            <div class="file-header">
+                <div>
+                    <div class="file-title">2️⃣ index.html</div>
+                    <div class="file-path">public_html/index.html</div>
+                </div>
+                <button class="copy-btn" onclick="copyContent('indexhtml', this)">📋 Kopyala</button>
+            </div>
+            <textarea class="content-box" id="indexhtml" readonly>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Insurance Policy Management Platform</title>
+    <script type="module" crossorigin src="/assets/index-D-eNjOcn.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CbrOWOiA.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+</textarea>
+        </div>
+
+        <!-- File 3: CSS - Link to raw file -->
+        <div class="file-section">
+            <div class="file-header">
+                <div>
+                    <div class="file-title">3️⃣ CSS Dosyası <span class="big-file">(35 KB)</span></div>
+                    <div class="file-path">public_html/assets/index-CbrOWOiA.css</div>
+                </div>
+                <a href="../dist/assets/index-CbrOWOiA.css" target="_blank" class="copy-btn" style="text-decoration:none;">📥 Dosyayı Aç</a>
+            </div>
+            <div class="content-box">
+                Bu dosya çok büyük.<br><br>
+                <strong>Adımlar:</strong><br>
+                1. "Dosyayı Aç" butonuna tıkla<br>
+                2. Yeni sekmede açılacak<br>
+                3. Ctrl+A (hepsini seç) → Ctrl+C (kopyala)<br>
+                4. cPanel'de assets/index-CbrOWOiA.css oluştur ve yapıştır
+            </div>
+        </div>
+
+        <!-- File 4: JS - Link to raw file -->
+        <div class="file-section">
+            <div class="file-header">
+                <div>
+                    <div class="file-title">4️⃣ JavaScript Dosyası <span class="big-file">(1 MB)</span></div>
+                    <div class="file-path">public_html/assets/index-D-eNjOcn.js</div>
+                </div>
+                <a href="../dist/assets/index-D-eNjOcn.js" target="_blank" class="copy-btn" style="text-decoration:none;">📥 Dosyayı Aç</a>
+            </div>
+            <div class="content-box">
+                Bu dosya çok büyük.<br><br>
+                <strong>Adımlar:</strong><br>
+                1. "Dosyayı Aç" butonuna tıkla<br>
+                2. Yeni sekmede açılacak<br>
+                3. Ctrl+A (hepsini seç) → Ctrl+C (kopyala)<br>
+                4. cPanel'de assets/index-D-eNjOcn.js oluştur ve yapıştır
+            </div>
+        </div>
+
+        <div class="step">
+            <strong>✅ Yükleme Sırası:</strong>
+            1. .htaccess kopyala-yapıştır<br>
+            2. index.html kopyala-yapıştır<br>
+            3. assets/ klasörü oluştur<br>
+            4. CSS dosyasını aç → kopyala → assets/ içinde oluştur → yapıştır<br>
+            5. JS dosyasını aç → kopyala → assets/ içinde oluştur → yapıştır<br>
+            6. Test: https://stnsigorta.com
+        </div>
+    </div>
+
+    <script>
+        function copyContent(id, btn) {
+            const textarea = document.getElementById(id);
+            textarea.select();
+            document.execCommand('copy');
+            btn.textContent = '✅ Kopyalandı!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = '📋 Kopyala';
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

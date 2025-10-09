@@ -1,0 +1,30 @@
+==========================================
+CPANEL YÜKLEME - 3 DOSYA YÖNTEMİ
+==========================================
+
+Bolt.new Export bozuk, manuel yükle:
+
+1. .htaccess (root klasördeki)
+2. dist/index.html 
+3. dist/assets/index-CbrOWOiA.css
+4. dist/assets/index-D-eNjOcn.js
+
+CPANEL YAPISI:
+--------------
+public_html/
+├── .htaccess
+├── index.html
+└── assets/
+    ├── index-CbrOWOiA.css
+    └── index-D-eNjOcn.js
+
+ADIMLAR:
+--------
+1. File Manager → public_html
+2. Upload .htaccess
+3. Upload index.html
+4. Yeni klasör oluştur: assets
+5. assets içine 2 dosya yükle
+
+TAMAM!
+==========================================
