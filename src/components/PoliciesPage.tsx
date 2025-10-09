@@ -142,8 +142,7 @@ export default function PoliciesPage() {
 
         if (error) throw error;
         alert(`✅ ${client?.name} müşterisinin ${clientPoliciesCount} poliçesi silindi (Müşteri kaydı korundu)`);
-        setSelectedClient('all');
-        fetchPolicies();
+        window.location.reload();
       } catch (error) {
         console.error('Silme hatası:', error);
         alert('❌ Silme işlemi başarısız: ' + (error as any).message);
@@ -177,7 +176,7 @@ export default function PoliciesPage() {
 
         if (error) throw error;
         alert(`✅ Toplam ${totalPolicies} poliçe silindi. Müşteri kayıtları korundu.`);
-        fetchPolicies();
+        window.location.reload();
       } catch (error) {
         console.error('Silme hatası:', error);
         alert('❌ Silme işlemi başarısız: ' + (error as any).message);
@@ -199,7 +198,7 @@ export default function PoliciesPage() {
       if (error) throw error;
 
       alert('✅ Poliçe başarıyla silindi');
-      fetchPolicies();
+      window.location.reload();
     } catch (error: any) {
       alert('❌ Poliçe silinemedi: ' + error.message);
     }
