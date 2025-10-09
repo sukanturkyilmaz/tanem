@@ -110,14 +110,13 @@ export default function PoliciesPage() {
     if (!userData.user) return;
 
     const totalPolicies = policies.length;
-    const totalClients = clients.length;
 
     if (totalPolicies === 0) {
       alert('❌ Silinecek poliçe yok.');
       return;
     }
 
-    if (!confirm(`🚨 TEHLİKELİ İŞLEM!\n\n${totalClients} müşteriye ait TOPLAM ${totalPolicies} POLİÇE kalıcı olarak silinecek.\n\n(Müşteri kayıtları SİLİNMEYECEK)\n\nBu işlem GERİ ALINAMAZ! Emin misiniz?`)) {
+    if (!confirm(`🚨 TEHLİKELİ İŞLEM!\n\nTOPLAM ${totalPolicies} POLİÇE kalıcı olarak silinecek.\n\n(Müşteri kayıtları SİLİNMEYECEK)\n\nBu işlem GERİ ALINAMAZ! Emin misiniz?`)) {
       return;
     }
 
@@ -370,10 +369,6 @@ export default function PoliciesPage() {
           </button>
           <button
             onClick={() => {
-              alert('BUTON ÇALIŞIYOR!');
-              console.log('Tümünü Sil butonu tıklandı');
-              console.log('isAdmin:', isAdmin);
-              console.log('profile:', profile);
               if (!isAdmin) {
                 alert('Sadece yöneticiler toplu silme yapabilir');
                 return;
