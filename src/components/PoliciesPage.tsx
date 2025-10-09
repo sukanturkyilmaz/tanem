@@ -370,6 +370,7 @@ export default function PoliciesPage() {
           </button>
           <button
             onClick={() => {
+              alert('BUTON ÇALIŞIYOR!');
               console.log('Tümünü Sil butonu tıklandı');
               console.log('isAdmin:', isAdmin);
               console.log('profile:', profile);
