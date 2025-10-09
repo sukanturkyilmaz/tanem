@@ -109,78 +109,38 @@ export default function PoliciesPage() {
     const { data: userData } = await supabase.auth.getUser();
     if (!userData.user) return;
 
-    const deleteChoice = confirm(
-      selectedClient !== 'all'
-        ? `Seçili Müşteri: ${clients.find(c => c.id === selectedClient)?.name}\n\nHangi poliçeleri silmek istiyorsunuz?\n\nTAMAM = Bu müşterinin poliçelerini sil\nİPTAL = Tüm müşterilerin poliçelerini sil`
-        : `Hangi poliçeleri silmek istiyorsunuz?\n\nTAMAM = Tüm müşterilerin poliçelerini sil\nİPTAL = İşlemi iptal et`
-    );
+    const totalPolicies = policies.length;
+    const totalClients = clients.length;
 
-    if (selectedClient !== 'all' && deleteChoice) {
-      const client = clients.find(c => c.id === selectedClient);
-      const clientPolicies = policies.filter(p => p.client_id === selectedClient);
-      const clientPoliciesCount = clientPolicies.length;
+    if (totalPolicies === 0) {
+      alert('❌ Silinecek poliçe yok.');
+      return;
+    }
 
-      if (clientPoliciesCount === 0) {
-        alert('❌ Bu müşterinin silinecek poliçesi yok.');
-        return;
-      }
+    if (!confirm(`🚨 TEHLİKELİ İŞLEM!\n\n${totalClients} müşteriye ait TOPLAM ${totalPolicies} POLİÇE kalıcı olarak silinecek.\n\n(Müşteri kayıtları SİLİNMEYECEK)\n\nBu işlem GERİ ALINAMAZ! Emin misiniz?`)) {
+      return;
+    }
 
-      if (!confirm(`⚠️ UYARI: "${client?.name}" müşterisinin ${clientPoliciesCount} adet poliçesini kalıcı olarak silmek istediğinizden emin misiniz?\n\n(Müşteri kaydı SİLİNMEYECEK, sadece poliçeler silinecek)`)) {
-        return;
-      }
+    if (!confirm(`✋ SON UYARI!\n\nTüm poliçeler (${totalPolicies} adet) kalıcı olarak VERİTABANINDAN silinecek.\n\nDevam edilsin mi?`)) {
+      return;
+    }
 
-      if (!confirm(`✋ SON ONAY: ${client?.name} için ${clientPoliciesCount} poliçe kalıcı olarak VERİTABANINDAN silinecek.\n\nBu işlem GERİ ALINAMAZ! Devam edilsin mi?`)) {
-        return;
-      }
+    if (!confirm(`⛔ LÜTFEN ONAYLAYIN:\n\n"${totalPolicies} poliçe kalıcı olarak silinecek"\n\nBu mesajı okuyup anladınız mı?`)) {
+      return;
+    }
 
-      try {
-        const { error } = await supabase
-          .from('policies')
-          .delete()
-          .eq('client_id', selectedClient)
-          .eq('agent_id', userData.user.id);
+    try {
+      const { error } = await supabase
+        .from('policies')
+        .delete()
+        .eq('agent_id', userData.user.id);
 
-        if (error) throw error;
-        alert(`✅ ${client?.name} müşterisinin ${clientPoliciesCount} poliçesi silindi (Müşteri kaydı korundu)`);
-        window.location.reload();
-      } catch (error) {
-        console.error('Silme hatası:', error);
-        alert('❌ Silme işlemi başarısız: ' + (error as any).message);
-      }
-    } else if (selectedClient === 'all' && deleteChoice) {
-      const totalPolicies = policies.length;
-      const totalClients = clients.length;
-
-      if (totalPolicies === 0) {
-        alert('❌ Silinecek poliçe yok.');
-        return;
-      }
-
-      if (!confirm(`🚨 TEHLİKELİ İŞLEM!\n\n${totalClients} müşteriye ait TOPLAM ${totalPolicies} POLİÇE kalıcı olarak silinecek.\n\n(Müşteri kayıtları SİLİNMEYECEK)\n\nBu işlem GERİ ALINAMAZ! Emin misiniz?`)) {
-        return;
-      }
-
-      if (!confirm(`✋ SON UYARI!\n\nTüm poliçeler (${totalPolicies} adet) kalıcı olarak VERİTABANINDAN silinecek.\n\nDevam edilsin mi?`)) {
-        return;
-      }
-
-      if (!confirm(`⛔ LÜTFEN ONAYLAYIN:\n\n"${totalPolicies} poliçe kalıcı olarak silinecek"\n\nBu mesajı okuyup anladınız mı?`)) {
-        return;
-      }
-
-      try {
-        const { error } = await supabase
-          .from('policies')
-          .delete()
-          .eq('agent_id', userData.user.id);
-
-        if (error) throw error;
-        alert(`✅ Toplam ${totalPolicies} poliçe silindi. Müşteri kayıtları korundu.`);
-        window.location.reload();
-      } catch (error) {
-        console.error('Silme hatası:', error);
-        alert('❌ Silme işlemi başarısız: ' + (error as any).message);
-      }
+      if (error) throw error;
+      alert(`✅ Toplam ${totalPolicies} poliçe silindi. Müşteri kayıtları korundu.`);
+      window.location.reload();
+    } catch (error) {
+      console.error('Silme hatası:', error);
+      alert('❌ Silme işlemi başarısız: ' + (error as any).message);
     }
   };
 
