@@ -132,7 +132,7 @@ export default function PoliciesPage() {
       const { error } = await supabase
         .from('policies')
         .delete()
-        .eq('agent_id', userData.user.id);
+        .neq('id', '00000000-0000-0000-0000-000000000000');
 
       if (error) throw error;
       alert(`✅ Toplam ${totalPolicies} poliçe silindi. Müşteri kayıtları korundu.`);
