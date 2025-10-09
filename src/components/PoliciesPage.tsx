@@ -370,6 +370,9 @@ export default function PoliciesPage() {
           </button>
           <button
             onClick={() => {
+              console.log('Tümünü Sil butonu tıklandı');
+              console.log('isAdmin:', isAdmin);
+              console.log('profile:', profile);
               if (!isAdmin) {
                 alert('Sadece yöneticiler toplu silme yapabilir');
                 return;
