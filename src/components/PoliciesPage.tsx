@@ -264,6 +264,10 @@ export default function PoliciesPage() {
     );
   }
 
+  const today = new Date();
+  const activePolicies = filteredPolicies.filter(p => new Date(p.end_date) >= today);
+  const totalActivePremium = activePolicies.reduce((sum, p) => sum + (Number(p.premium_amount) || 0), 0);
+
   return (
     <div>
       <div className="mb-6">
@@ -279,6 +283,40 @@ export default function PoliciesPage() {
             <Download className="w-5 h-5" />
             Excel İndir
           </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-blue-600 font-medium mb-1">Toplam Poliçe</p>
+                <p className="text-2xl font-bold text-blue-900">{filteredPolicies.length}</p>
+              </div>
+              <FileText className="w-10 h-10 text-blue-600 opacity-50" />
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-green-600 font-medium mb-1">Aktif Poliçe</p>
+                <p className="text-2xl font-bold text-green-900">{activePolicies.length}</p>
+              </div>
+              <Calendar className="w-10 h-10 text-green-600 opacity-50" />
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 border border-amber-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-amber-600 font-medium mb-1">Aktif Prim Toplamı</p>
+                <p className="text-2xl font-bold text-amber-900">
+                  {totalActivePremium.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' })}
+                </p>
+              </div>
+              <DollarSign className="w-10 h-10 text-amber-600 opacity-50" />
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
