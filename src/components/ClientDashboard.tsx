@@ -150,6 +150,8 @@ export default function ClientDashboard() {
     try {
       setLoading(true);
 
+      const today = new Date().toISOString().split('T')[0];
+
       const [
         { data: policiesData, count: policiesCount },
         { data: claimsData, count: claimsCount },
@@ -160,7 +162,7 @@ export default function ClientDashboard() {
           .eq('client_id', clientId)
           .is('archived_at', null)
           .eq('is_deleted', false)
-          .gte('end_date', new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
+          .gte('end_date', today)
           .order('start_date', { ascending: false }),
         supabase
           .from('claims')
@@ -174,7 +176,7 @@ export default function ClientDashboard() {
       const totalClaimAmount =
         claimsData?.reduce((sum, c) => sum + Number(c.payment_amount), 0) || 0;
 
-      const today = new Date();
+      const todayDate = new Date();
       const earnedPremium = policiesData?.reduce((sum, policy) => {
         const startDate = new Date(policy.start_date);
         const endDate = new Date(policy.end_date);
@@ -182,7 +184,7 @@ export default function ClientDashboard() {
 
         const daysElapsed = Math.min(
           totalDays,
-          Math.max(0, Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)))
+          Math.max(0, Math.ceil((todayDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)))
         );
 
         const earnedRatio = daysElapsed / totalDays;
