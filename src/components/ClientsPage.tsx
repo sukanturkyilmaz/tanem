@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Users, Trash2, UserPlus, Search, Phone, Mail, FileText, Key } from 'lucide-react';
+import { Users, Trash2, UserPlus, Search, Phone, Mail, FileText, Key, Clock, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import AddClientModal from './AddClientModal';
-import CreateClientAccountModal from './CreateClientAccountModal';
 
 interface Client {
   id: string;
   name: string;
+  full_name: string;
   tc_number: string | null;
   tax_number: string | null;
   phone: string | null;
@@ -17,6 +17,7 @@ interface Client {
   claim_count?: number;
   user_id: string | null;
   password_set: boolean;
+  registration_status?: 'pending' | 'completed';
 }
 
 export default function ClientsPage() {
@@ -25,8 +26,6 @@ export default function ClientsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   useEffect(() => {
     loadClients();
@@ -254,21 +253,16 @@ export default function ClientsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                      {client.password_set ? (
+                      {client.registration_status === 'completed' || client.password_set ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Aktif
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Kayıtlı
                         </span>
                       ) : (
-                        <button
-                          onClick={() => {
-                            setSelectedClient(client);
-                            setShowCreateAccountModal(true);
-                          }}
-                          className="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full hover:bg-blue-200 transition-colors"
-                        >
-                          <Key className="w-3 h-3 mr-1" />
-                          Hesap Oluştur
-                        </button>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                          <Clock className="w-3 h-3 mr-1" />
+                          Bekliyor
+                        </span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -298,20 +292,6 @@ export default function ClientsPage() {
         />
       )}
 
-      {showCreateAccountModal && selectedClient && (
-        <CreateClientAccountModal
-          client={selectedClient}
-          onClose={() => {
-            setShowCreateAccountModal(false);
-            setSelectedClient(null);
-          }}
-          onSuccess={() => {
-            setShowCreateAccountModal(false);
-            setSelectedClient(null);
-            loadClients();
-          }}
-        />
-      )}
     </div>
   );
 }

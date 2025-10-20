@@ -18,6 +18,12 @@ export default function AddClientModal({ onClose, onSuccess }: AddClientModalPro
     address: '',
   });
 
+  const generateToken = async () => {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -64,21 +70,25 @@ export default function AddClientModal({ onClose, onSuccess }: AddClientModalPro
         }
       }
 
+      const registrationToken = await generateToken();
+
       const { error } = await supabase.from('clients').insert([
         {
-          name: formData.name,
+          full_name: formData.name,
           tc_number: formData.tc_number || null,
           tax_number: formData.tax_number || null,
           phone: formData.phone || null,
           email: formData.email || null,
           address: formData.address || null,
           agent_id: userData.user.id,
+          registration_status: 'pending',
+          registration_token: registrationToken,
         },
       ]);
 
       if (error) throw error;
 
-      alert('Müşteri başarıyla eklendi!');
+      alert(`Müşteri başarıyla eklendi!\n\nMüşterinize şu bilgileri verin:\n- Ad Soyad: ${formData.name}\n${formData.email ? `- E-posta: ${formData.email}` : ''}\n\nMüşteri bu bilgilerle sisteme kayıt olabilir.`);
       onSuccess();
     } catch (error: any) {
       console.error('Error adding client:', error);

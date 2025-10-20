@@ -49,6 +49,12 @@ export default function CustomerMessagesPage() {
     try {
       const { data: userData } = await supabase.auth.getUser();
 
+      if (!userData.user) {
+        console.error('No user found');
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('customer_messages')
         .select(
@@ -61,10 +67,15 @@ export default function CustomerMessagesPage() {
           )
         `
         )
-        .eq('agent_id', userData.user?.id)
+        .eq('agent_id', userData.user.id)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching messages:', error);
+        throw error;
+      }
+
+      console.log('Fetched messages:', data);
       setMessages(data || []);
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -236,7 +247,7 @@ export default function CustomerMessagesPage() {
                   </div>
                   {getPriorityBadge(message.priority)}
                 </div>
-                <p className="text-sm text-gray-600 mb-2">{message.clients.full_name}</p>
+                <p className="text-sm text-gray-600 mb-2">{message.clients?.full_name || 'Bilinmeyen'}</p>
                 <p className="text-xs text-gray-500 line-clamp-2 mb-2">{message.message}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500">
@@ -270,11 +281,11 @@ export default function CustomerMessagesPage() {
                       {selectedMessage.subject}
                     </h3>
                     <div className="flex items-center gap-3 text-sm text-gray-600">
-                      <span className="font-medium">{selectedMessage.clients.full_name}</span>
+                      <span className="font-medium">{selectedMessage.clients?.full_name || 'Bilinmeyen'}</span>
                       <span>•</span>
-                      <span>{selectedMessage.clients.email}</span>
+                      <span>{selectedMessage.clients?.email || '-'}</span>
                       <span>•</span>
-                      <span>{selectedMessage.clients.phone}</span>
+                      <span>{selectedMessage.clients?.phone || '-'}</span>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 items-end">

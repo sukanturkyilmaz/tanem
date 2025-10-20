@@ -93,10 +93,12 @@ export default function NotificationDropdown() {
 
   const markAsRead = async (notificationId: string) => {
     try {
-      await supabase
+      const { error } = await supabase
         .from('notifications')
         .update({ read: true })
         .eq('id', notificationId);
+
+      if (error) throw error;
 
       setNotifications((prev) =>
         prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
@@ -125,8 +127,10 @@ export default function NotificationDropdown() {
     }
   };
 
-  const handleNotificationClick = (notification: Notification) => {
-    markAsRead(notification.id);
+  const handleNotificationClick = async (notification: Notification) => {
+    if (!notification.read) {
+      await markAsRead(notification.id);
+    }
 
     if (notification.link) {
       window.dispatchEvent(new CustomEvent('navigate', { detail: notification.link }));

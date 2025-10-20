@@ -36,6 +36,14 @@ export default function DocumentsManagementPage() {
   const fetchDocuments = async () => {
     try {
       setLoading(true);
+      const { data: userData } = await supabase.auth.getUser();
+
+      if (!userData.user) {
+        console.error('No user found');
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('client_documents')
         .select(`
@@ -45,9 +53,15 @@ export default function DocumentsManagementPage() {
             email
           )
         `)
+        .eq('agent_id', userData.user.id)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching documents:', error);
+        throw error;
+      }
+
+      console.log('Fetched documents:', data);
       setDocuments(data || []);
     } catch (error) {
       console.error('Error fetching documents:', error);
