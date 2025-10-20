@@ -66,15 +66,21 @@ export default function Dashboard() {
     try {
       setLoading(true);
 
+      const today = new Date();
+      const oneYearAgo = new Date();
+      oneYearAgo.setFullYear(today.getFullYear() - 1);
+
       let policiesQuery = supabase
         .from('policies')
         .select('policy_number, premium_amount, start_date, end_date', { count: 'exact' })
         .is('archived_at', null)
-        .eq('is_deleted', false);
+        .eq('is_deleted', false)
+        .gte('start_date', oneYearAgo.toISOString());
 
       let claimsQuery = supabase
         .from('claims')
-        .select('payment_amount, policy:policies(policy_number)', { count: 'exact' });
+        .select('payment_amount, claim_date, policy:policies(policy_number)', { count: 'exact' })
+        .gte('claim_date', oneYearAgo.toISOString());
 
       if (!isAdmin && profile) {
         policiesQuery = policiesQuery.eq('agent_id', profile.id);
@@ -101,7 +107,6 @@ export default function Dashboard() {
 
       const matchedPolicies = policies?.filter(p => matchedPolicyNumbers.has(p.policy_number)) || [];
 
-      const today = new Date();
       const earnedPremium = matchedPolicies.reduce((sum, policy) => {
         const startDate = new Date(policy.start_date);
         const endDate = new Date(policy.end_date);

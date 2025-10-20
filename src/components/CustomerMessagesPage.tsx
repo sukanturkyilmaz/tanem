@@ -300,7 +300,7 @@ export default function CustomerMessagesPage() {
 
                 <div className="border-t border-gray-200 pt-6">
                   <h4 className="font-semibold text-gray-900 mb-3">Durum Güncelle</h4>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <button
                       onClick={() => handleStatusChange(selectedMessage.id, 'read')}
                       disabled={selectedMessage.status === 'read'}
@@ -316,16 +316,19 @@ export default function CustomerMessagesPage() {
                       Yanıtlandı İşaretle
                     </button>
                     <button
-                      onClick={() => handleStatusChange(selectedMessage.id, 'closed')}
+                      onClick={async () => {
+                        await handleStatusChange(selectedMessage.id, 'closed');
+                        alert('✅ Destek talebi kapatıldı. Müşteri bilgilendirildi.');
+                      }}
                       disabled={selectedMessage.status === 'closed'}
                       className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
                     >
-                      Kapat
+                      Kapat ve Müşteriyi Bilgilendir
                     </button>
                   </div>
                   <p className="text-sm text-gray-600 mt-3">
                     <strong>Not:</strong> Müşteriyle iletişim kurmak için yukarıdaki telefon veya
-                    e-posta bilgilerini kullanabilirsiniz.
+                    e-posta bilgilerini kullanabilirsiniz. Destek talebi kapatıldığında müşteri otomatik olarak bilgilendirilir.
                   </p>
                 </div>
               </div>

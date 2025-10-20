@@ -26,6 +26,8 @@ export default function ClaimsPage() {
   const [claimTypes, setClaimTypes] = useState<string[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [selectedClientForDelete, setSelectedClientForDelete] = useState<string>('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
   const [deleteConfirmStep, setDeleteConfirmStep] = useState(1);
 
@@ -37,7 +39,7 @@ export default function ClaimsPage() {
   useEffect(() => {
     filterAndSortClaims();
     calculateTopVehicles();
-  }, [claims, searchTerm, sortBy, filterInsuranceCompany, filterClaimType]);
+  }, [claims, searchTerm, sortBy, filterInsuranceCompany, filterClaimType, startDate, endDate]);
 
   const fetchClaims = async () => {
     try {
@@ -108,6 +110,14 @@ export default function ClaimsPage() {
 
     if (filterClaimType) {
       filtered = filtered.filter(c => c.claim_type === filterClaimType);
+    }
+
+    if (startDate) {
+      filtered = filtered.filter((c) => new Date(c.claim_date) >= new Date(startDate));
+    }
+
+    if (endDate) {
+      filtered = filtered.filter((c) => new Date(c.claim_date) <= new Date(endDate));
     }
 
     filtered.sort((a, b) => {
@@ -357,7 +367,7 @@ export default function ClaimsPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
               <select
                 value={filterInsuranceCompany}
                 onChange={(e) => setFilterInsuranceCompany(e.target.value)}
@@ -392,7 +402,41 @@ export default function ClaimsPage() {
                   <option value="count">En Çok Hasar Adedi</option>
                 </select>
               </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Başlangıç Tarihi</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Bitiş Tarihi</label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                />
+              </div>
             </div>
+
+            {(startDate || endDate) && (
+              <div className="mt-3">
+                <button
+                  onClick={() => {
+                    setStartDate('');
+                    setEndDate('');
+                  }}
+                  className="text-sm text-blue-600 hover:text-blue-800 underline"
+                >
+                  Tarih Filtrelerini Temizle
+                </button>
+              </div>
+            )}
 
             {(filterInsuranceCompany || filterClaimType) && (
               <div className="flex gap-2">

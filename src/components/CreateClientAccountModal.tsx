@@ -46,12 +46,19 @@ export default function CreateClientAccountModal({ client, onClose, onSuccess }:
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: window.location.origin,
+          data: {
+            full_name: client.name,
+            role: 'client',
+          }
+        }
       });
 
       if (authError) throw authError;
 
       if (authData.user) {
-        const { error: profileError } = await supabase.from('profiles').insert([
+        const { error: profileError } = await supabase.from('profiles').upsert([
           {
             id: authData.user.id,
             email,
@@ -59,7 +66,7 @@ export default function CreateClientAccountModal({ client, onClose, onSuccess }:
             role: 'client',
             is_verified: true,
           },
-        ]);
+        ], { onConflict: 'id' });
 
         if (profileError) throw profileError;
 
@@ -74,7 +81,7 @@ export default function CreateClientAccountModal({ client, onClose, onSuccess }:
 
         if (updateError) throw updateError;
 
-        alert(`Müşteri hesabı başarıyla oluşturuldu!\n\nEmail: ${email}\nŞifre: ${password}\n\nBu bilgileri müşterinizle paylaşın.`);
+        alert(`Müşteri hesabı başarıyla oluşturuldu!\n\nEmail: ${email}\nŞifre: ${password}\n\nBu bilgileri müşterinizle paylaşın.\n\nMüşteri bu bilgilerle giriş yapabilir.`);
         onSuccess();
       }
     } catch (err: any) {

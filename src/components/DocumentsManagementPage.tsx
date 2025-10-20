@@ -23,11 +23,14 @@ export default function DocumentsManagementPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
+  const [filterClient, setFilterClient] = useState<string>('all');
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [clients, setClients] = useState<{id: string, full_name: string}[]>([]);
 
   useEffect(() => {
     fetchDocuments();
+    fetchClients();
   }, []);
 
   const fetchDocuments = async () => {
@@ -50,6 +53,20 @@ export default function DocumentsManagementPage() {
       console.error('Error fetching documents:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchClients = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('clients')
+        .select('id, full_name')
+        .order('full_name');
+
+      if (error) throw error;
+      setClients(data || []);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
     }
   };
 
@@ -119,8 +136,9 @@ export default function DocumentsManagementPage() {
       doc.clients.email.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesType = filterType === 'all' || doc.document_type === filterType;
+    const matchesClient = filterClient === 'all' || doc.client_id === filterClient;
 
-    return matchesSearch && matchesType;
+    return matchesSearch && matchesType && matchesClient;
   });
 
   const stats = {
@@ -183,7 +201,7 @@ export default function DocumentsManagementPage() {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
         <div className="p-4 border-b border-gray-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -209,6 +227,22 @@ export default function DocumentsManagementPage() {
                 <option value="fatura">Fatura</option>
                 <option value="sozlesme">Sözleşme</option>
                 <option value="diger">Diğer</option>
+              </select>
+            </div>
+
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <select
+                value={filterClient}
+                onChange={(e) => setFilterClient(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
+              >
+                <option value="all">Tüm Müşteriler</option>
+                {clients.map((client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.full_name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

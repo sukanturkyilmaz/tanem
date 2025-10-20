@@ -38,6 +38,8 @@ export default function PoliciesPage() {
   const [selectedClient, setSelectedClient] = useState<string>('all');
   const [insuranceCompanies, setInsuranceCompanies] = useState<InsuranceCompany[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>('all');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     fetchPolicies();
@@ -47,7 +49,7 @@ export default function PoliciesPage() {
 
   useEffect(() => {
     filterPolicies();
-  }, [policies, searchTerm, filterType, plateFilter, selectedClient, selectedCompany]);
+  }, [policies, searchTerm, filterType, plateFilter, selectedClient, selectedCompany, startDate, endDate]);
 
   const fetchClients = async () => {
     try {
@@ -207,6 +209,14 @@ export default function PoliciesPage() {
       filtered = filtered.filter((p) =>
         p.plate_number?.toLowerCase().includes(plateFilter.toLowerCase())
       );
+    }
+
+    if (startDate) {
+      filtered = filtered.filter((p) => new Date(p.start_date) >= new Date(startDate));
+    }
+
+    if (endDate) {
+      filtered = filtered.filter((p) => new Date(p.end_date) <= new Date(endDate));
     }
 
     if (searchTerm) {
@@ -422,7 +432,7 @@ export default function PoliciesPage() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
@@ -499,7 +509,41 @@ export default function PoliciesPage() {
               ))}
             </select>
           </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Başlangıç Tarihi</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Bitiş Tarihi</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+          </div>
         </div>
+
+        {(startDate || endDate) && (
+          <div className="mt-3 flex items-center gap-2">
+            <button
+              onClick={() => {
+                setStartDate('');
+                setEndDate('');
+              }}
+              className="text-sm text-blue-600 hover:text-blue-800 underline"
+            >
+              Tarih Filtrelerini Temizle
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="space-y-4">

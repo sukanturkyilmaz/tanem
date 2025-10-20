@@ -580,20 +580,20 @@ export default function AnalyticsPage() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Tümü</option>
-              <option value="Kasko">Kasko</option>
-              <option value="Trafik">Trafik</option>
-              <option value="DASK">DASK</option>
-              <option value="Konut">Konut</option>
-              <option value="İşyeri">İşyeri</option>
-              <option value="Sağlık">Sağlık</option>
-              <option value="Hayat">Hayat</option>
-              <option value="Ferdi Kaza">Ferdi Kaza</option>
-              <option value="Seyahat">Seyahat</option>
-              <option value="IMM">IMM</option>
-              <option value="Nakliyat">Nakliyat</option>
-              <option value="Yangın">Yangın</option>
-              <option value="Mühendislik">Mühendislik</option>
-              <option value="Sorumluluk">Sorumluluk</option>
+              <option value="kasko">Kasko</option>
+              <option value="trafik">Trafik</option>
+              <option value="dask">DASK</option>
+              <option value="residence">Konut</option>
+              <option value="workplace">İşyeri</option>
+              <option value="health">Sağlık</option>
+              <option value="hayat">Hayat</option>
+              <option value="ferdi_kaza">Ferdi Kaza</option>
+              <option value="seyahat">Seyahat</option>
+              <option value="imm">IMM</option>
+              <option value="nakliyat">Nakliyat</option>
+              <option value="yangin">Yangın</option>
+              <option value="muhendislik">Mühendislik</option>
+              <option value="sorumluluk">Sorumluluk</option>
             </select>
           </div>
         </div>

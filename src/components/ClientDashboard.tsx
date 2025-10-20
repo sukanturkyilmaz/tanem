@@ -150,7 +150,10 @@ export default function ClientDashboard() {
     try {
       setLoading(true);
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date();
+      const oneYearAgo = new Date();
+      oneYearAgo.setFullYear(today.getFullYear() - 1);
+      const todayStr = today.toISOString().split('T')[0];
 
       const [
         { data: policiesData, count: policiesCount },
@@ -162,12 +165,14 @@ export default function ClientDashboard() {
           .eq('client_id', clientId)
           .is('archived_at', null)
           .eq('is_deleted', false)
-          .gte('end_date', today)
+          .gte('start_date', oneYearAgo.toISOString())
+          .gte('end_date', todayStr)
           .order('start_date', { ascending: false }),
         supabase
           .from('claims')
           .select('*, insurance_companies(name)', { count: 'exact' })
           .eq('client_id', clientId)
+          .gte('claim_date', oneYearAgo.toISOString())
           .order('claim_date', { ascending: false }),
       ]);
 

@@ -29,6 +29,11 @@ export default function SettingsPage() {
     show_insurance_companies: true,
   });
   const [savingVisibility, setSavingVisibility] = useState(false);
+  const [archiveSettings, setArchiveSettings] = useState({
+    policy_pdf_retention_days: 365,
+    document_retention_days: 365,
+  });
+  const [savingArchive, setSavingArchive] = useState(false);
 
   useEffect(() => {
     if (isAdmin) {
@@ -36,6 +41,7 @@ export default function SettingsPage() {
       fetchCompanies();
       fetchClients();
       fetchVisibilitySettings();
+      fetchArchiveSettings();
       if (profile?.verification_code) {
         setMyVerificationCode(profile.verification_code);
       }
@@ -134,6 +140,57 @@ export default function SettingsPage() {
       alert('Ayarlar kaydedilirken hata oluştu: ' + error.message);
     } finally {
       setSavingVisibility(false);
+    }
+  };
+
+  const fetchArchiveSettings = async () => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+
+      const { data, error } = await supabase
+        .from('archive_settings')
+        .select('*')
+        .eq('agent_id', userData.user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data) {
+        setArchiveSettings({
+          policy_pdf_retention_days: data.policy_pdf_retention_days,
+          document_retention_days: data.document_retention_days,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching archive settings:', error);
+    }
+  };
+
+  const handleSaveArchiveSettings = async () => {
+    setSavingArchive(true);
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error('Kullanıcı bulunamadı');
+
+      const { error } = await supabase
+        .from('archive_settings')
+        .upsert({
+          agent_id: userData.user.id,
+          policy_pdf_retention_days: archiveSettings.policy_pdf_retention_days,
+          document_retention_days: archiveSettings.document_retention_days,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'agent_id' });
+
+      if (error) throw error;
+
+      alert('✅ Arşiv ayarları başarıyla kaydedildi');
+      fetchArchiveSettings();
+    } catch (error: any) {
+      console.error('Error saving archive settings:', error);
+      alert('❌ Arşiv ayarları kaydedilirken hata oluştu: ' + error.message);
+    } finally {
+      setSavingArchive(false);
     }
   };
 
@@ -547,6 +604,74 @@ export default function SettingsPage() {
             <Save className="w-5 h-5" />
             {savingVisibility ? 'Kaydediliyor...' : 'Görünürlük Ayarlarını Kaydet'}
           </button>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Veri Arşivleme Ayarları</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Eski verilerin ne kadar süre saklanacağını belirleyin. Belirlenen süreden eski veriler otomatik olarak temizlenecektir.
+          </p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Poliçe PDF Saklama Süresi (Gün)
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="3650"
+                value={archiveSettings.policy_pdf_retention_days}
+                onChange={(e) =>
+                  setArchiveSettings({
+                    ...archiveSettings,
+                    policy_pdf_retention_days: parseInt(e.target.value) || 365,
+                  })
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {archiveSettings.policy_pdf_retention_days} gün = yaklaşık {Math.round(archiveSettings.policy_pdf_retention_days / 30)} ay = {Math.round(archiveSettings.policy_pdf_retention_days / 365)} yıl
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Müşteri Dosyaları Saklama Süresi (Gün)
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="3650"
+                value={archiveSettings.document_retention_days}
+                onChange={(e) =>
+                  setArchiveSettings({
+                    ...archiveSettings,
+                    document_retention_days: parseInt(e.target.value) || 365,
+                  })
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {archiveSettings.document_retention_days} gün = yaklaşık {Math.round(archiveSettings.document_retention_days / 30)} ay = {Math.round(archiveSettings.document_retention_days / 365)} yıl
+              </p>
+            </div>
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <p className="text-sm text-yellow-800">
+                <strong>Not:</strong> Belirlenen süreden eski poliçe PDF'leri ve müşteri dosyaları otomatik olarak silinecektir.
+                Poliçe ve hasar kayıtları silinmeyecek, sadece dosyalar temizlenecektir.
+              </p>
+            </div>
+
+            <button
+              onClick={handleSaveArchiveSettings}
+              disabled={savingArchive}
+              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              <Save className="w-5 h-5" />
+              {savingArchive ? 'Kaydediliyor...' : 'Arşiv Ayarlarını Kaydet'}
+            </button>
+          </div>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
