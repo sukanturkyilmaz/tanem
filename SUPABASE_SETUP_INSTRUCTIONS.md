@@ -1,58 +1,58 @@
-# Supabase Database Setup Instructions
+# Supabase Veritabanı Kurulum Talimatları
 
-## Complete Clean Installation - STN Türkyılmaz Sigorta
+## STN Türkyılmaz Sigorta - Temiz Kurulum
 
-Follow these steps **IN ORDER** to set up your database from scratch.
-
----
-
-## ⚠️ IMPORTANT WARNING
-
-**This will DELETE all existing data in your database!**
-
-If you have any important data, back it up first through Supabase Dashboard > Storage.
+Bu adımları **SIRAYLA** takip ederek veritabanınızı sıfırdan kurun.
 
 ---
 
-## Step 1: Access Supabase SQL Editor
+## ⚠️ ÖNEMLİ UYARI
 
-1. Go to https://supabase.com/dashboard
-2. Select your project: `ocmofokkokzufivkcafr`
-3. Click **SQL Editor** in the left sidebar
-4. Click **New query** button
+**Bu işlem veritabanınızdaki tüm mevcut veriyi SİLECEKTİR!**
+
+Önemli verileriniz varsa, önce Supabase Dashboard > Storage üzerinden yedekleyin.
 
 ---
 
-## Step 2: Run the Complete Migration
+## Adım 1: Supabase SQL Editor'e Erişim
 
-1. Open the file `COMPLETE_MIGRATION.sql` in this project
-2. **Copy the ENTIRE contents** of the file
-3. **Paste it** into the Supabase SQL Editor
-4. Click the **RUN** button (or press Ctrl+Enter / Cmd+Enter)
-5. Wait for the script to complete (should take 10-20 seconds)
-6. **Check for errors** in the output panel at the bottom
+1. https://supabase.com/dashboard adresine gidin
+2. Projenizi seçin: `rtswtjgblxhyvlmaspmp`
+3. Sol menüden **SQL Editor** seçeneğine tıklayın
+4. **New query** butonuna tıklayın
 
-### Expected Success Message:
+---
+
+## Adım 2: Tam Migration'ı Çalıştırın
+
+1. Bu projedeki `COMPLETE_MIGRATION.sql` dosyasını açın
+2. Dosyanın **TÜM içeriğini** kopyalayın
+3. Supabase SQL Editor'e **yapıştırın**
+4. **RUN** butonuna tıklayın (veya Ctrl+Enter / Cmd+Enter tuşlarına basın)
+5. Script'in tamamlanmasını bekleyin (10-20 saniye sürer)
+6. Alt paneldeki çıktıda **hata kontrolü** yapın
+
+### Beklenen Başarı Mesajı:
 
 ```
 SUCCESS: All tables created | table_count: 13
 ```
 
-### What This Script Does:
+### Bu Script Ne Yapar:
 
-- ✅ Drops all existing tables (clean slate)
-- ✅ Creates 13 new tables with proper structure
-- ✅ Sets up Row Level Security (RLS) policies
-- ✅ Creates 5 storage buckets with RLS
-- ✅ Adds triggers and functions
-- ✅ Inserts Turkish insurance companies
-- ✅ Inserts default settings
+- ✅ Tüm mevcut tabloları siler (temiz başlangıç)
+- ✅ Doğru yapıyla 13 yeni tablo oluşturur
+- ✅ Row Level Security (RLS) politikalarını ayarlar
+- ✅ RLS ile 5 storage bucket oluşturur
+- ✅ Trigger'ları ve fonksiyonları ekler
+- ✅ Türk sigorta şirketlerini ekler
+- ✅ Varsayılan ayarları ekler
 
 ---
 
-## Step 3: Verify Tables Were Created
+## Adım 3: Tabloların Oluşturulduğunu Doğrulayın
 
-Run this query in SQL Editor to verify:
+SQL Editor'de bu sorguyu çalıştırarak doğrulayın:
 
 ```sql
 SELECT table_name
@@ -62,7 +62,7 @@ WHERE table_schema = 'public'
 ORDER BY table_name;
 ```
 
-### Expected Tables (13 total):
+### Beklenen Tablolar (13 adet):
 
 1. ✅ agency_info
 2. ✅ announcement_reads
@@ -81,19 +81,17 @@ ORDER BY table_name;
 
 ---
 
-## Step 4: Create Admin User Profile
+## Adım 4: Admin Kullanıcı Profili Oluşturun
 
-**IMPORTANT:** Use the existing auth user ID from your screenshot:
-- User ID: `a5d8fcb8-362d-453e-82a6-4fba97691dcb`
-- Email: `sukan@turkyilmazigorta.com`
+**ÖNEMLİ:** Mevcut auth kullanıcı bilgilerinizi kullanın.
 
-Run this SQL in the editor:
+SQL editor'de bu sorguyu çalıştırın (kendi bilgilerinizle güncelleyin):
 
 ```sql
--- Insert admin profile for existing user
+-- Mevcut kullanıcı için admin profili ekle
 INSERT INTO profiles (id, email, full_name, role, company_name, phone)
 VALUES (
-  'a5d8fcb8-362d-453e-82a6-4fba97691dcb',
+  'YOUR-USER-ID-HERE',  -- Supabase Auth > Users bölümünden User ID'nizi alın
   'sukan@turkyilmazigorta.com',
   'Sukan Türkyılmaz',
   'admin',
@@ -108,16 +106,16 @@ ON CONFLICT (id) DO UPDATE SET
   phone = EXCLUDED.phone,
   updated_at = now();
 
--- Verify the admin was created
+-- Admin'in oluşturulduğunu doğrula
 SELECT id, email, full_name, role, created_at
 FROM profiles
 WHERE role = 'admin';
 ```
 
-### Expected Output:
+### Beklenen Çıktı:
 
 ```
-id: a5d8fcb8-362d-453e-82a6-4fba97691dcb
+id: [your-user-id]
 email: sukan@turkyilmazigorta.com
 full_name: Sukan Türkyılmaz
 role: admin
@@ -126,10 +124,10 @@ created_at: [timestamp]
 
 ---
 
-## Step 5: Verify Storage Buckets
+## Adım 5: Storage Bucket'larını Doğrulayın
 
-1. Click **Storage** in the left sidebar
-2. You should see 5 buckets:
+1. Sol menüden **Storage** seçeneğine tıklayın
+2. 5 bucket görmelisiniz:
    - ✅ policies (Public)
    - ✅ policy-documents (Public)
    - ✅ client-documents (Public)
@@ -138,126 +136,126 @@ created_at: [timestamp]
 
 ---
 
-## Step 6: Verify Insurance Companies
+## Adım 6: Sigorta Şirketlerini Doğrulayın
 
-Run this query:
+Bu sorguyu çalıştırın:
 
 ```sql
 SELECT name FROM insurance_companies ORDER BY name;
 ```
 
-You should see 19 Turkish insurance companies including:
+19 Türk sigorta şirketi görmelisiniz:
 - Anadolu Sigorta
 - Allianz Sigorta
 - Aksigorta
-- And 16 more...
+- Ve 16 tane daha...
 
 ---
 
-## Step 7: Test Database Connection
+## Adım 7: Veritabanı Bağlantısını Test Edin
 
-Your `.env` file should have these values:
+`.env` dosyanızda şu değerler olmalı:
 
 ```env
-VITE_SUPABASE_URL=https://ocmofokkokzufivkcafr.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+VITE_SUPABASE_URL=https://rtswtjgblxhyvlmaspmp.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0c3d0amdibHhoeXZsbWFzcG1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5MDMyNjgsImV4cCI6MjA3NTQ3OTI2OH0.rdPp6BFl9PNlBxWhiQzfKjEDz1RHGZVebJfMj1ebdp4
 ```
 
-**No changes needed** - these are already correct!
+**Değişiklik gerekmez** - bunlar zaten doğru!
 
 ---
 
-## Step 8: Test Login
+## Adım 8: Giriş Testi
 
-1. In your local development environment, run: `npm run dev`
-2. Go to http://localhost:8080
-3. Login with:
+1. Local development ortamınızda çalıştırın: `npm run dev`
+2. http://localhost:8080 adresine gidin
+3. Şu bilgilerle giriş yapın:
    - Email: `sukan@turkyilmazigorta.com`
-   - Password: [your existing password]
-4. You should see the admin dashboard
+   - Şifre: [mevcut şifreniz]
+4. Admin dashboard'u görmelisiniz
 
 ---
 
-## Troubleshooting
+## Sorun Giderme
 
-### Error: "duplicate key value violates unique constraint"
+### Hata: "duplicate key value violates unique constraint"
 
-This means the table or data already exists. Solution:
-1. Re-run the COMPLETE_MIGRATION.sql script
-2. It will DROP all tables first, then recreate them
+Bu, tablo veya verinin zaten var olduğu anlamına gelir. Çözüm:
+1. COMPLETE_MIGRATION.sql script'ini tekrar çalıştırın
+2. Önce tüm tabloları SILINECEK, sonra yeniden oluşturulacak
 
-### Error: "relation does not exist"
+### Hata: "relation does not exist"
 
-This means a table wasn't created properly. Solution:
-1. Check the SQL Editor output for specific errors
-2. Run the verification query from Step 3
-3. If tables are missing, re-run COMPLETE_MIGRATION.sql
+Bu, bir tablonun düzgün oluşturulmadığı anlamına gelir. Çözüm:
+1. SQL Editor çıktısında belirli hataları kontrol edin
+2. Adım 3'teki doğrulama sorgusunu çalıştırın
+3. Tablolar eksikse, COMPLETE_MIGRATION.sql'i tekrar çalıştırın
 
-### Error: "permission denied for table"
+### Hata: "permission denied for table"
 
-This means RLS policies aren't set correctly. Solution:
-1. Verify you're logged in as an admin
-2. Re-run COMPLETE_MIGRATION.sql
+Bu, RLS politikalarının doğru ayarlanmadığı anlamına gelir. Çözüm:
+1. Admin olarak giriş yaptığınızı doğrulayın
+2. COMPLETE_MIGRATION.sql'i tekrar çalıştırın
 
-### Can't Login After Migration
+### Migration Sonrası Giriş Yapamıyorum
 
-Check your auth user exists:
+Auth kullanıcınızın var olduğunu kontrol edin:
 
 ```sql
--- Run this in SQL Editor
+-- SQL Editor'de bunu çalıştırın
 SELECT id, email, created_at
 FROM auth.users
 WHERE email = 'sukan@turkyilmazigorta.com';
 ```
 
-If the user doesn't exist, you'll need to create a new one through Supabase Auth Dashboard.
+Kullanıcı yoksa, Supabase Auth Dashboard üzerinden yeni bir tane oluşturmanız gerekecek.
 
 ---
 
-## Next Steps
+## Sonraki Adımlar
 
-After successful database setup:
+Başarılı veritabanı kurulumundan sonra:
 
-1. ✅ Update your local `.env` file (already done!)
-2. ✅ Test the application locally
-3. ✅ Add test clients and policies
-4. ✅ Test all features (upload PDFs, create claims, etc.)
-5. ✅ Deploy to Vercel with updated environment variables
-
----
-
-## Database Schema Summary
-
-### Core Tables:
-- **profiles** - User accounts (admin, agent, client)
-- **clients** - Customer records
-- **insurance_companies** - Insurance provider list
-- **policies** - Insurance policies (Kasko, Trafik, İşyeri, etc.)
-- **claims** - Insurance claims
-- **settings** - Application settings
-
-### Engagement Tables:
-- **announcements** - Agent announcements to clients
-- **announcement_reads** - Track which announcements were read
-- **agency_info** - Agency contact information
-- **customer_messages** - Support messages from clients
-- **notifications** - User notifications
-
-### Management Tables:
-- **policy_renewal_requests** - Policy renewal tracking
-- **client_documents** - Document management
-- **dashboard_visibility_settings** - Customize dashboard widgets
+1. ✅ Local `.env` dosyanızı güncelleyin (zaten tamamlandı!)
+2. ✅ Uygulamayı local'de test edin
+3. ✅ Test müşterileri ve poliçeler ekleyin
+4. ✅ Tüm özellikleri test edin (PDF yükleme, hasar kaydı oluşturma, vb.)
+5. ✅ Güncellenmiş environment variable'larla Vercel'e deploy edin
 
 ---
 
-## Support
+## Veritabanı Şeması Özeti
 
-If you encounter any issues:
-1. Check the Supabase Logs tab
-2. Verify RLS policies are enabled
-3. Confirm your admin profile exists
-4. Check that storage buckets are created
+### Temel Tablolar:
+- **profiles** - Kullanıcı hesapları (admin, agent, müşteri)
+- **clients** - Müşteri kayıtları
+- **insurance_companies** - Sigorta şirketi listesi
+- **policies** - Sigorta poliçeleri (Kasko, Trafik, İşyeri, vb.)
+- **claims** - Sigorta hasarları
+- **settings** - Uygulama ayarları
+
+### Müşteri İletişim Tabloları:
+- **announcements** - Acente duyuruları
+- **announcement_reads** - Okunmuş duyuruların takibi
+- **agency_info** - Acente iletişim bilgileri
+- **customer_messages** - Müşterilerden destek mesajları
+- **notifications** - Kullanıcı bildirimleri
+
+### Yönetim Tabloları:
+- **policy_renewal_requests** - Poliçe yenileme takibi
+- **client_documents** - Döküman yönetimi
+- **dashboard_visibility_settings** - Dashboard widget'larını özelleştirme
 
 ---
 
-**Database setup complete!** 🎉
+## Destek
+
+Herhangi bir sorunla karşılaşırsanız:
+1. Supabase Logs sekmesini kontrol edin
+2. RLS politikalarının etkin olduğunu doğrulayın
+3. Admin profilinizin var olduğunu onaylayın
+4. Storage bucket'larının oluşturulduğunu kontrol edin
+
+---
+
+**Veritabanı kurulumu tamamlandı!** 🎉
