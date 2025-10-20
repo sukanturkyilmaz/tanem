@@ -1,19 +1,52 @@
 import { createClient } from '@supabase/supabase-js';
 
+export const EXPECTED_PROJECT_ID = 'azktsinnkthmjizpbaks';
+export const EXPECTED_SUPABASE_URL = `https://${EXPECTED_PROJECT_ID}.supabase.co`;
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables:', {
-    hasUrl: !!supabaseUrl,
-    hasKey: !!supabaseAnonKey,
-    env: import.meta.env
-  });
+function extractProjectIdFromUrl(url: string): string | null {
+  const match = url.match(/https:\/\/([a-z0-9]+)\.supabase\.co/);
+  return match ? match[1] : null;
 }
 
+function validateSupabaseConnection() {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('❌ Missing Supabase environment variables:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseAnonKey,
+    });
+    throw new Error('Missing Supabase environment variables');
+  }
+
+  const projectId = extractProjectIdFromUrl(supabaseUrl);
+
+  if (!projectId) {
+    console.error('❌ Invalid Supabase URL format:', supabaseUrl);
+    throw new Error('Invalid Supabase URL format');
+  }
+
+  if (projectId !== EXPECTED_PROJECT_ID) {
+    console.error('❌ WRONG DATABASE CONNECTION DETECTED!');
+    console.error(`Expected Project ID: ${EXPECTED_PROJECT_ID}`);
+    console.error(`Found Project ID: ${projectId}`);
+    console.error(`Expected URL: ${EXPECTED_SUPABASE_URL}`);
+    console.error(`Found URL: ${supabaseUrl}`);
+    throw new Error(
+      `Wrong database connection! Expected: ${EXPECTED_PROJECT_ID}, Found: ${projectId}`
+    );
+  }
+
+  console.log(`✅ Connected to correct Supabase Project: ${EXPECTED_PROJECT_ID}`);
+  console.log(`✅ Database URL: ${supabaseUrl}`);
+}
+
+validateSupabaseConnection();
+
 export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder-key',
+  supabaseUrl,
+  supabaseAnonKey,
   {
     auth: {
       persistSession: true,

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { supabase, Settings } from '../lib/supabase';
+import { supabase, Settings, EXPECTED_PROJECT_ID, EXPECTED_SUPABASE_URL } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Save, Upload, Plus, X, Eye, EyeOff } from 'lucide-react';
+import { Save, Upload, Plus, X, Eye, EyeOff, Database, CheckCircle } from 'lucide-react';
+import { getDatabaseInfo } from '../lib/database-validator';
 
 export default function SettingsPage() {
   const { isAdmin, profile } = useAuth();
@@ -34,6 +35,11 @@ export default function SettingsPage() {
     document_retention_days: 365,
   });
   const [savingArchive, setSavingArchive] = useState(false);
+  const [dbInfo, setDbInfo] = useState<{
+    projectId: string;
+    projectName: string;
+    environment: string;
+  } | null>(null);
 
   useEffect(() => {
     if (isAdmin) {
@@ -42,11 +48,23 @@ export default function SettingsPage() {
       fetchClients();
       fetchVisibilitySettings();
       fetchArchiveSettings();
+      fetchDatabaseInfo();
       if (profile?.verification_code) {
         setMyVerificationCode(profile.verification_code);
       }
     }
   }, [isAdmin, profile]);
+
+  const fetchDatabaseInfo = async () => {
+    const info = await getDatabaseInfo();
+    if (info) {
+      setDbInfo({
+        projectId: info.project_id,
+        projectName: info.project_name,
+        environment: info.environment,
+      });
+    }
+  };
 
   const fetchSettings = async () => {
     try {
@@ -353,6 +371,62 @@ export default function SettingsPage() {
       </div>
 
       <div className="space-y-6">
+        {dbInfo && (
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-xl shadow-sm p-6">
+            <div className="flex items-start gap-4">
+              <div className="bg-green-100 p-3 rounded-full">
+                <Database className="w-6 h-6 text-green-600" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900">System Information</h3>
+                  <CheckCircle className="w-5 h-5 text-green-600" />
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Database connection status and project details</p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <p className="text-xs text-gray-500 mb-1">Connection Status</p>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                      <p className="text-sm font-semibold text-green-700">Connected & Validated</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <p className="text-xs text-gray-500 mb-1">Environment</p>
+                    <p className="text-sm font-semibold text-gray-900 capitalize">{dbInfo.environment}</p>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <p className="text-xs text-gray-500 mb-1">Project ID</p>
+                    <p className="text-sm font-mono font-semibold text-gray-900">{dbInfo.projectId}</p>
+                    {dbInfo.projectId === EXPECTED_PROJECT_ID && (
+                      <p className="text-xs text-green-600 mt-1">✓ Correct database connected</p>
+                    )}
+                  </div>
+
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <p className="text-xs text-gray-500 mb-1">Project Name</p>
+                    <p className="text-sm font-semibold text-gray-900">{dbInfo.projectName}</p>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 md:col-span-2">
+                    <p className="text-xs text-gray-500 mb-1">Database URL</p>
+                    <p className="text-sm font-mono text-gray-900 break-all">{EXPECTED_SUPABASE_URL}</p>
+                  </div>
+                </div>
+
+                <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-xs text-blue-800">
+                    <strong>Security Note:</strong> This system validates the database connection on every startup to prevent connecting to wrong databases.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {myVerificationCode && (
           <div className="bg-blue-50 border border-blue-200 rounded-xl shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Doğrulama Kodunuz</h3>

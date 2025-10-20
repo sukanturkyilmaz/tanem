@@ -1,7 +1,8 @@
 import { ReactNode, useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, Menu, X, FileText, AlertCircle, BarChart3, Settings, Users, Bell, Building2, MessageSquare, RefreshCw, FolderOpen, Download } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { LogOut, Menu, X, FileText, AlertCircle, BarChart3, Settings, Users, Bell, Building2, MessageSquare, RefreshCw, FolderOpen, Download, Database } from 'lucide-react';
+import { supabase, EXPECTED_PROJECT_ID } from '../lib/supabase';
+import { getDatabaseInfo } from '../lib/database-validator';
 import NotificationDropdown from './NotificationDropdown';
 
 interface LayoutProps {
@@ -18,10 +19,23 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
   const [newDocumentsCount, setNewDocumentsCount] = useState(0);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState('STN Türkyılmaz Sigorta');
+  const [dbInfo, setDbInfo] = useState<{ projectName: string; environment: string } | null>(null);
+  const [showDbBadge, setShowDbBadge] = useState(false);
 
   useEffect(() => {
     fetchSettings();
+    fetchDatabaseInfo();
   }, []);
+
+  const fetchDatabaseInfo = async () => {
+    const info = await getDatabaseInfo();
+    if (info) {
+      setDbInfo({
+        projectName: info.project_name,
+        environment: info.environment,
+      });
+    }
+  };
 
   useEffect(() => {
     if (isAdmin && !isClient) {
@@ -189,6 +203,49 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
             </div>
 
             <div className="flex items-center gap-4">
+              {isAdmin && (
+                <button
+                  onClick={() => setShowDbBadge(!showDbBadge)}
+                  className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                  title="Database Connection Status"
+                >
+                  <Database className="w-5 h-5" />
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                </button>
+              )}
+
+              {showDbBadge && dbInfo && (
+                <div className="absolute top-16 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 w-80">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                      <Database className="w-4 h-4" />
+                      Database Status
+                    </h3>
+                    <button onClick={() => setShowDbBadge(false)} className="text-gray-400 hover:text-gray-600">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                      <span className="text-gray-600">Connected</span>
+                    </div>
+                    <div className="bg-gray-50 p-2 rounded border border-gray-200">
+                      <p className="text-xs text-gray-500 mb-1">Project ID</p>
+                      <p className="font-mono text-xs text-green-600 font-semibold">{EXPECTED_PROJECT_ID}</p>
+                    </div>
+                    <div className="bg-gray-50 p-2 rounded border border-gray-200">
+                      <p className="text-xs text-gray-500 mb-1">Project Name</p>
+                      <p className="text-xs text-gray-900">{dbInfo.projectName}</p>
+                    </div>
+                    <div className="bg-gray-50 p-2 rounded border border-gray-200">
+                      <p className="text-xs text-gray-500 mb-1">Environment</p>
+                      <p className="text-xs text-gray-900 capitalize">{dbInfo.environment}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <NotificationDropdown />
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-gray-900">{profile?.full_name}</p>
