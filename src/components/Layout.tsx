@@ -72,6 +72,18 @@ export default function Layout({ children, currentPage, onNavigate }: LayoutProp
     }
   }, [isAdmin, isClient]);
 
+  useEffect(() => {
+    if (isAdmin && !isClient) {
+      if (currentPage === 'messages') {
+        fetchNewMessagesCount();
+      } else if (currentPage === 'renewals') {
+        fetchPendingRenewalsCount();
+      } else if (currentPage === 'documents') {
+        fetchNewDocumentsCount();
+      }
+    }
+  }, [currentPage, isAdmin, isClient]);
+
   const fetchSettings = async () => {
     try {
       const { data } = await supabase.from('settings').select('logo_url, company_name').maybeSingle();
